@@ -1,0 +1,70 @@
+{{ def chart(x): }}
+<canvas id="chart_{{=x[0]}}" width="400" height="400"></canvas>
+<script>
+    var ctx = document.getElementById('chart_{{=x[0]}}');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{=XML(x[1])}},
+            datasets: [{
+                data: {{=XML(x[2])}},
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.4)',
+                'rgba(54, 162, 235, 0.4)',
+                'rgba(255, 206, 86, 0.4)',
+                'rgba(75, 192, 192, 0.4)',
+                'rgba(153, 102, 255, 0.4)',
+                'rgba(255, 159, 64, 0.4)'
+                ],
+                borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 2,
+            }],
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display: false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Area {{=x[0]}}',
+                padding: 40,
+                fontSize: 16,
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            },
+            plugins: {
+                datalabels: {
+                    anchor: 'end',
+                }
+            },
+            layout: {
+                padding: {
+                    left: 30,
+                    right: 30,
+                    top: 30,
+                    bottom: 30
+                }
+            },
+        },
+    });
+</script>
+{{ pass }}
+
+<div class="row">
+{{ for x in areas_eventos_cantidades: }}
+    <div class="col-md-6">
+        {{= chart(x) }}
+    </div>
+{{ pass }}
+</div>

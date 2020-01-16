@@ -1,0 +1,99 @@
+{{ if len(eventos) > 0 and len(cantidades) > 0: }}
+<div class="row">
+    <div class="col-md-6">
+        <canvas id="chart_eventos" width="400" height="400"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h5 class="py-2"><strong>Promedio de Demora en Despacho de Llamada</strong></h4>
+        <div class="col-md-6">
+            <p><strong>{{=eventos[0]}}</strong> : {{=promedios[0]}} min</p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>{{=eventos[1]}}</strong> : {{=promedios[1]}} min</p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>{{=eventos[2]}}</strong> : {{=promedios[2]}} min</p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>{{=eventos[3]}}</strong> : {{=promedios[3]}} min</p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>{{=eventos[4]}}</strong> : {{=promedios[4]}} min</p>
+        </div>
+    </div>
+</div>
+<script>
+var ctx = document.getElementById('chart_eventos');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{=XML(eventos)}},
+            datasets: [{
+                data: {{=cantidades}},
+                backgroundColor: [
+                'rgba(255, 99, 132, 0.4)',
+                'rgba(54, 162, 235, 0.4)',
+                'rgba(255, 206, 86, 0.4)',
+                'rgba(75, 192, 192, 0.4)',
+                'rgba(153, 102, 255, 0.4)',
+                'rgba(255, 159, 64, 0.4)'
+                ],
+                borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 2,
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display: false,
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Eventos',
+                padding: 40,
+                fontSize: 16,
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            },
+            plugins: {
+                datalabels: {
+                    labels: {
+                        name: {
+                            align: 'top',
+                                font: {
+                                size: 13,
+                                    weight: 'bold'
+                            },
+                            formatter: function (value, ctx) {
+                                return ctx.active
+                                    ? 'Campo'
+                                    : ctx.chart.data.labels[ctx.dataIndex];
+                            }
+                        },
+                    }
+                }
+            },
+            layout: {
+                padding: {
+                    left: 50,
+                    right: 50,
+                    top: 30,
+                    bottom: 50
+                }
+            },
+        },
+    });
+</script>
+{{else:}}
+<h3>Sin graficos</h3>
+{{pass}}

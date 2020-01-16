@@ -1,0 +1,12 @@
+{{ extend 'layout.html' }}
+{{block header}}
+<div class="bg-primary py-3 text-white">
+    <div class="container">
+        <h2>Encuestas</h2>
+        <p>Listado de encuestas de Serivio 911</p>
+    </div>
+
+</div>
+{{end}}
+{{grid.components.pop(0)}}
+{{=grid}}

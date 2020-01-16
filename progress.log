@@ -1,0 +1,24 @@
+[2019-11-26 09:42:38] START
+[2019-12-02 11:37:48] EDIT encuestas_911/models/db.py: 0
+[2019-12-04 12:13:18] EDIT encuestas_911/modules/widget.py: 16
+[2019-12-04 12:13:35] EDIT encuestas_911/modules/widget.py: 0
+[2019-12-04 12:13:41] EDIT encuestas_911/modules/widget.py: 0
+[2019-12-04 12:14:45] EDIT encuestas_911/models/db.py: 0
+[2019-12-04 12:14:56] EDIT encuestas_911/models/db.py: 0
+[2019-12-04 12:15:38] EDIT encuestas_911/modules/widget.py: 0
+[2019-12-04 12:16:41] EDIT encuestas_911/modules/widget.py: 0
+[2019-12-04 12:28:48] EDIT encuestas_911/controllers/default.py: 0
+[2019-12-04 12:45:57] EDIT encuestas_911/views/default/encuestas.html: 1
+[2019-12-04 12:46:00] EDIT encuestas_911/views/default/encuestas.html: 0
+[2019-12-11 12:02:28] EDIT encuestas_911/controllers/default.py: 0
+[2019-12-11 12:10:26] EDIT encuestas_911/views/default/nueva_encuesta.html: 1
+[2019-12-12 17:18:55] EDIT encuestas_911/models/db.py: 0
+[2019-12-12 17:19:43] EDIT encuestas_911/controllers/default.py: 1
+[2019-12-12 17:27:59] EDIT encuestas_911/controllers/default.py: 0
+[2019-12-13 12:37:51] EDIT encuestas_911/controllers/default.py: -1
+[2019-12-13 13:09:45] EDIT encuestas_911/models/db.py: 1
+[2019-12-13 13:12:51] EDIT encuestas_911/views/default/nueva_encuesta.html: 6
+[2019-12-18 14:04:49] EDIT encuestas_911/controllers/default.py: 3
+[2019-12-18 14:18:14] EDIT encuestas_911/controllers/default.py: -7
+[2019-12-18 14:19:40] EDIT encuestas_911/controllers/default.py: 0
+[2019-12-18 14:19:52] EDIT encuestas_911/controllers/default.py: 0

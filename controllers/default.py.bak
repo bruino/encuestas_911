@@ -1,0 +1,189 @@
+# -*- coding: utf-8 -*-
+# -------------------------------------------------------------------------
+# This is a sample controller
+# this file is released under public domain and you can use without limitations
+# -------------------------------------------------------------------------
+
+# ---- example index page ----
+def index():
+    response.flash = 'Bienvenido'
+    return dict()
+
+@auth.requires_login()
+def encuestas():
+    if request.args(1) and request.args(1) == 'new':
+        redirect(URL('nueva_encuesta'))
+
+    fields = [
+        db.reclamo.horario_llamada,
+        db.reclamo.numero_ticket,
+        db.reclamo.evento,
+        db.reclamo.area,
+        db.reclamo.persepcion_general_sistema,
+    ]
+
+    grid = SQLFORM.smartgrid(
+        db.reclamo,
+        breadcrumbs_class='breadcrumb',
+        showbuttontext=True,
+        fields=fields,
+        csv=False,
+        orderby=dict(reclamo=~db.reclamo.id),
+        advanced_search=False,
+        )
+    return dict(grid=grid)
+
+@auth.requires_login()
+def nueva_encuesta():
+    form = SQLFORM.factory(db.reclamo, submit_button='Enviar')
+    if form.accepts(request.vars):
+        id_reclamo = db.reclamo.insert(**db.reclamo._filter_fields(form.vars))
+        print(id_reclamo)
+        redirect(URL('encuestas'))
+    return dict(form=form)
+
+@auth.requires_login()
+def reportes():
+    from widget import date_widget
+    form = SQLFORM.factory(
+        Field('desde', 'string', requires=IS_NOT_EMPTY()),#, widget=date_widget),
+        Field('hasta', 'string', requires=IS_NOT_EMPTY())#, widget=date_widget),
+    )
+
+    if form.accepts(request.vars):
+        redirect(URL('default', 'reportes', args=[form.vars.desde, form.vars.hasta]))
+        
+    return dict(
+        form=form,
+        )
+
+def satisfaccion():
+    query_satisfactorio = (db.reclamo.atencion_telefonica == 'Buena') | (db.reclamo.atencion_telefonica == 'Muy Buena') | (db.reclamo.atencion_telefonica == 'Excelente')
+    query_no_satisfactorio = (db.reclamo.atencion_telefonica == 'Mala') | (db.reclamo.atencion_telefonica == 'Regular')
+    satisfactorio = db(query_satisfactorio).count()
+    no_satisfactorio = db(query_no_satisfactorio).count()
+    return dict(satisfactorio=satisfactorio, no_satisfactorio=no_satisfactorio)
+
+def calificacion_llamada():
+    query_desde_hasta = (db.reclamo.at_created >= request.args[0]) & (db.reclamo.at_created <= request.args[1])
+
+    cantidad_llamadas_calificacion_mala = db((db.reclamo.atencion_telefonica == 'Mala') & query_desde_hasta).count()
+    cantidad_llamadas_calificacion_regular = db((db.reclamo.atencion_telefonica == 'Regular') & query_desde_hasta).count()
+    cantidad_llamadas_calificacion_bueno = db((db.reclamo.atencion_telefonica == 'Buena') & query_desde_hasta).count()
+    cantidad_llamadas_calificacion_muy_bueno = db((db.reclamo.atencion_telefonica == 'Muy Buena') & query_desde_hasta).count()
+    cantidad_llamadas_calificacion_excelente = db((db.reclamo.atencion_telefonica == 'Excelente') & query_desde_hasta).count()
+
+    cantidades = [
+        cantidad_llamadas_calificacion_mala,
+        cantidad_llamadas_calificacion_regular,
+        cantidad_llamadas_calificacion_bueno,
+        cantidad_llamadas_calificacion_muy_bueno,
+        cantidad_llamadas_calificacion_excelente,
+    ]
+    return dict(cantidades=cantidades)
+
+def denuncias_comisarias():
+    query_desde_hasta = (db.reclamo.at_created >= request.args[0]) & (db.reclamo.at_created <= request.args[1])
+
+    comisarias = []
+    cantidades = []
+    for comisaria in db().select(db.comisaria.nombre):
+        cantidad = db((db.reclamo.denuncia_comisaria == comisaria.nombre) & query_desde_hasta).count()
+        comisarias.append(comisaria.nombre)
+        cantidades.append(cantidad)
+
+    from gluon.serializers import json
+    return dict(comisarias=json(comisarias), cantidades=cantidades)
+
+def eventos():
+    query_desde_hasta = (db.reclamo.at_created >= request.args[0]) & (db.reclamo.at_created <= request.args[1])
+
+    eventos = []
+    cantidades = []
+    for evento in db().select(db.evento.nombre):
+        cantidad = db((db.reclamo.evento == evento.nombre) & query_desde_hasta).count()
+        eventos.append(evento.nombre)
+        cantidades.append(cantidad)
+
+    from gluon.serializers import json
+    return dict(eventos=eventos, cantidades=cantidades)
+
+def fue_a_comisaria():
+    cantidad_si = db(db.reclamo.hizo_denuncia == 'Si').count()
+    cantidad_no = db(db.reclamo.hizo_denuncia == 'No').count()
+    cantidad_ns = db(db.reclamo.hizo_denuncia == 'N/S').count()
+    return dict(
+        cantidad_si=cantidad_si,
+        cantidad_no=cantidad_no,
+        cantidad_ns=cantidad_ns,
+        )
+
+def cantidad_eventos_area():
+    query_desde_hasta = (db.reclamo.at_created >= request.args[0]) & (db.reclamo.at_created <= request.args[1])
+
+    areas_eventos_cantidades = []
+    for area in [1, 2, 3, 4]:
+        evento_cantidad = []
+        for evento in db().select(db.evento.nombre):
+            cantidad = db((db.reclamo.area == area) & (db.reclamo.evento == evento.nombre) & query_desde_hasta).count()
+            evento_cantidad.append([cantidad, evento.nombre])
+        # Ordena de menor a mayor
+        sorted(evento_cantidad)
+        # Ahora es mayor a menor
+        evento_cantidad.reverse()
+
+        eventos = [ x[1] for x in evento_cantidad[0:4] ]
+        cantidades = [ x[0] for x in evento_cantidad[0:4] ]
+
+        from gluon.serializers import json
+        areas_eventos_cantidades.append([str(area), json(eventos), json(cantidades)])
+    
+    print(areas_eventos_cantidades)
+    return dict(areas_eventos_cantidades=areas_eventos_cantidades)
+# ---- API (example) -----
+@auth.requires_login()
+def api_get_user_email():
+    if not request.env.request_method == 'GET': raise HTTP(403)
+    return response.json({'status':'success', 'email':auth.user.email})
+
+# ---- Smart Grid (example) -----
+@auth.requires_membership('admin') # can only be accessed by members of admin groupd
+def grid():
+    response.view = 'generic.html' # use a generic view
+    tablename = request.args(0)
+    if not tablename in db.tables: raise HTTP(403)
+    grid = SQLFORM.smartgrid(db[tablename], args=[tablename], deletable=False, editable=False)
+    return dict(grid=grid)
+
+# ---- Embedded wiki (example) ----
+def wiki():
+    auth.wikimenu() # add the wiki to the menu
+    return auth.wiki() 
+
+# ---- Action for login/register/etc (required for auth) -----
+def user():
+    """
+    exposes:
+    http://..../[app]/default/user/login
+    http://..../[app]/default/user/logout
+    http://..../[app]/default/user/register
+    http://..../[app]/default/user/profile
+    http://..../[app]/default/user/retrieve_password
+    http://..../[app]/default/user/change_password
+    http://..../[app]/default/user/bulk_register
+    use @auth.requires_login()
+        @auth.requires_membership('group name')
+        @auth.requires_permission('read','table name',record_id)
+    to decorate functions that need access control
+    also notice there is http://..../[app]/appadmin/manage/auth to allow administrator to manage users
+    """
+    return dict(form=auth())
+
+# ---- action to server uploaded static content (required) ---
+@cache.action()
+def download():
+    """
+    allows downloading of uploaded files
+    http://..../[app]/default/download/[filename]
+    """
+    return response.download(request, db)

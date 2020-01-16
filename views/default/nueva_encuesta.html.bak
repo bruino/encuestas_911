@@ -1,0 +1,179 @@
+{{extend 'layout.html'}}
+
+{{=form.custom.begin}}
+<div class="container">
+
+    <div class="row justify-content-center py-3">
+        <div class="col-md-6">
+            <div class="row bg-light p-4">
+                <h3 class="text-success"><strong>Encuestas 911</strong></h3>
+                <p>Control de Calidad de las llamadas al 911 de la Provincia de Tucumán</p>
+                
+            </div>
+            <br>
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.numero_ticket}}</strong></label>
+                {{=form.custom.widget.numero_ticket}}    
+            </div>
+            <br>
+            <div class="row bg-light py-4 px-2">
+                <div class="col-md-12">
+                    <label><strong>{{=form.custom.label.horario_llamada}}</strong></label>
+                </div>
+                <div class="col-md-12">
+                    {{=form.custom.widget.horario_llamada}}
+                </div>
+            </div>
+            <br>
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.evento}}</strong></label>
+                {{=form.custom.widget.evento}}
+            </div>
+            <br>
+            <!-- Direccion del Hecho de  Robo. -->
+            <div id="direccion_hecho" class="row bg-secondary text-white p-4">
+                <label><strong>{{=form.custom.label.direccion_hecho}}</strong></label>
+                {{form.custom.widget.direccion_hecho['_placeholder']= 'Ingrese Departamento, Localidad, Dirección y Número'}}
+                {{=form.custom.widget.direccion_hecho}}
+            </div>
+            <br id="br5">
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.area}}</strong></label>
+                {{=form.custom.widget.area}}
+            </div>
+            <br>
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.despacho_llamada}}</strong></label>
+                {{=form.custom.widget.despacho_llamada}}
+            </div>
+            <br>
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.atencion_telefonica}}</strong></label>
+                {{=form.custom.widget.atencion_telefonica}}
+            </div>
+            <br>
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.observacion_operador}}</strong></label>
+                {{=form.custom.widget.observacion_operador}}
+            </div>
+            <br>
+            <div class="row bg-light py-4 px-2">
+                <div class="col-md-12">
+                    <label><strong>{{=form.custom.label.llego_movil}}</strong></label>
+                </div>
+                <div class="col-md-12">
+                    {{=form.custom.widget.llego_movil}}
+                </div>
+            </div>
+            <br>
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.observacion_movil}}</strong></label>
+                {{=form.custom.widget.observacion_movil}}
+            </div>
+            <br>
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.persepcion_general_sistema}}</strong></label>
+                {{=form.custom.widget.persepcion_general_sistema}}
+            </div>
+            <br>
+            <div class="row bg-light p-4">
+                <label><strong>{{=form.custom.label.observacion_sistema}}</strong></label>
+                {{=form.custom.widget.observacion_sistema}}
+            </div>
+            <br>
+            <div class="row bg-light py-4 px-2">
+                <div class="col-md-12">
+                    <label><strong>{{=form.custom.label.hizo_denuncia}}</strong></label>
+                </div>
+                <div class="col-md-12">
+                    {{=form.custom.widget.hizo_denuncia}}
+                </div>
+            </div>
+            <br>
+            <div id="denuncia_comisaria" class="row bg-secondary text-white py-4 px-2">
+                <div class="col-md-12">
+                    <label><strong>{{=form.custom.label.denuncia_comisaria}}</strong></label>
+                </div>
+                <div class="col-md-12">
+                    {{=form.custom.widget.denuncia_comisaria}}
+                </div>
+            </div>
+            <br id="br1">
+            <div id="tomaron_denuncia" class="row bg-secondary text-white py-4 px-2">
+                <div class="col-md-12">
+                    <label><strong>{{=form.custom.label.tomaron_denuncia}}</strong></label>
+                </div>
+                <div class="col-md-12">
+                    {{=form.custom.widget.tomaron_denuncia}}
+                </div>
+            </div>
+            <br id="br2">
+            <div id="atencion_comisaria" class="row bg-secondary text-white py-4 px-2">
+                <div class="col-md-12">
+                    <label><strong>{{=form.custom.label.atencion_comisaria}}</strong></label>
+                </div>
+                <div class="col-md-12">
+                    {{=form.custom.widget.atencion_comisaria}}
+                </div>
+            </div>
+            <br id="br3">
+            <div id="observacion_comisaria" class="row bg-secondary text-white py-4 px-2">
+                <div class="col-md-12">
+                    <label><strong>{{=form.custom.label.observacion_comisaria}}</strong></label>
+                </div>
+                <div class="col-md-12">
+                    {{=form.custom.widget.observacion_comisaria}}
+                </div>
+            </div>
+            <br id="br4">
+            {{form.custom.submit['_class'] = 'btn btn-primary btn-block'}}
+            <div class="row">
+                {{=form.custom.submit}}
+            </div>
+        </div>
+    </div>
+    {{=form.custom.end}}
+</div>
+    
+<script>
+    $('#direccion_hecho').hide();
+    $('#denuncia_comisaria').hide();
+    $('#tomaron_denuncia').hide();
+    $('#atencion_comisaria').hide();
+    $('#observacion_comisaria').hide();
+    $('#br1').hide();
+    $('#br2').hide();
+    $('#br3').hide();
+    $('#br4').hide();
+    $('#br5').hide();
+    $('select[name=evento]').change(function () {
+            if (this.value == 'Robo' || this.value == 'Tentativa de Robo') {
+                $('#direccion_hecho').show();
+                $('#br5').show();
+            } else {
+                $('#direccion_hecho').hide();
+                $('#br5').hide();
+            }
+        });
+    $('input[type=radio][name=hizo_denuncia]').change(function () {
+        if (this.value == 'Si') {
+            $('#denuncia_comisaria').show();
+            $('#tomaron_denuncia').show();
+            $('#atencion_comisaria').show();
+            $('#observacion_comisaria').show();
+            $('#br1').show();
+            $('#br2').show();
+            $('#br3').show();
+            $('#br4').show();
+        } else {
+            $('#denuncia_comisaria').hide();
+            $('#tomaron_denuncia').hide();
+            $('#atencion_comisaria').hide();
+            $('#observacion_comisaria').hide();
+            $('#br1').hide();
+            $('#br2').hide();
+            $('#br3').hide();
+            $('#br4').hide();
+        }
+    });
+</script>

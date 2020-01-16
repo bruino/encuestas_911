@@ -1,0 +1,18 @@
+{{extend 'layout.html'}}
+
+{{block header}}
+<div class="bg-light py-5">
+  <div class="container">
+      <img alt="comment" class="pull-right" src="{{=URL('static/images', 'logo_normal.png')}}" width="500">
+    <h1 class="display-3">Bienvenido</h1>
+    <p class="lead">Sistema de Gestión de Encuestas al Servicio 911</p>
+    <hr class="my-4">
+    <p><strong>Ministerio de Seguridad de la Provincia de Tucumán</strong></p>
+    <p class="lead">
+      <a class="btn btn-primary btn-lg" href="{{=URL('default', 'encuestas')}}" role="button">Ir a Encuestas</a>
+    </p>
+  </div>
+</div>
+{{end}}
+
+

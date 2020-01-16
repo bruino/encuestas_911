@@ -1,0 +1,159 @@
+{{extend 'layout.html'}}
+
+{{block head}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+<script>
+    Chart.plugins.register({ChartDataLabels});
+    Chart.helpers.merge(Chart.defaults.global.plugins.datalabels, {
+        anchor: 'center',
+        align: 'end',
+        formatter: Math.round,
+        display: 'true',
+        labels: {
+            index: {
+                align: 'end',
+                anchor: 'end',
+                color: function (ctx) {
+                    return ctx.dataset.borderColor;
+                },
+                font: { size: 14 },
+                formatter: function (value, ctx) {
+                    let sum = 0;
+                    let dataArr = ctx.chart.data.datasets[0].data;
+                    dataArr.map(data => {
+                        sum += data;
+                    });
+                    let percentage = (value * 100 / sum).toFixed(2) + "%";
+                    return percentage;
+                },
+                offset: 8,
+            },
+            value: {
+                align: 'bottom',
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 1,
+                borderRadius: 10,
+                color: 'white',
+                padding: 4,
+                font: { weight: 'bold' },
+            }
+        }
+    });
+</script>
+{{end}}
+
+{{block header}}
+    <div class="bg-primary text-white py-3">
+        <div class="container">
+            {{=form.custom.begin}}
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <h2>Reportes</h2>
+                    <p class="lead">Sistema de Gestión de Encuestas al Servicio 911</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="row px-3">
+                        <label><strong>{{=form.custom.label.desde}}</strong></label>
+                    </div>
+                    <div class="row px-3">
+                        <input type="string" id="input_desde">
+                    </div>
+                </div>
+                <div class="col-md-4 px-3">
+                    <div class="row px-3">
+                        <label><strong>{{=form.custom.label.hasta}}</strong></label>
+                    </div>
+                    <div class="row px-3">
+                        <input type="string" id="input_hasta">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    {{form.custom.widget.desde['_placeholder'] = 'Desde'}}
+                    {{form.custom.widget.hasta['_placeholder'] = 'Hasta'}}
+                    <label><strong>Rango de Fecha</strong></label>
+                    <div class="py-3">{{=form.custom.widget.desde}}</div>
+                    <div class="py-3">{{=form.custom.widget.hasta}}</div>
+                    <div class="py-3">
+                        {{form.custom.submit['_class'] = 'btn btn-primary btn-block'}}
+                        {{=form.custom.submit}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{=form.custom.end}}
+    </div>
+{{end}}
+
+
+<div class="row">
+    <div class="col-md-6">
+        {{if len(request.args) == 2 and request.args[0] != 'None' and request.args[1] != 'None':}}
+        {{=LOAD('default','satisfaccion.load', args=[request.args[0], request.args[1]], ajax=True)}}
+        {{pass}}
+    </div>
+    <div class="col-md-6">
+        {{if len(request.args) == 2 and request.args[0] != 'None' and request.args[1] != 'None':}}
+        {{=LOAD('default','calificacion_llamada.load', args=[request.args[0], request.args[1]], ajax=True)}}
+        {{pass}}
+    </div> 
+</div>
+
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        {{if len(request.args) == 2 and request.args[0] != 'None' and request.args[1] != 'None':}}
+        {{=LOAD('default','solicitud_de_presencia_policial.load', args=[request.args[0], request.args[1]], ajax=True)}}
+        {{pass}}
+    </div>
+</div>
+
+{{if len(request.args) == 2 and request.args[0] != 'None' and request.args[1] != 'None':}}
+{{=LOAD('default','eventos.load', args=[request.args[0], request.args[1]], ajax=True)}}
+{{pass}}
+
+<hr>
+<div class="row">
+    <div class="col-md-6">
+        {{if len(request.args) == 2 and request.args[0] != 'None' and request.args[1] != 'None':}}
+        {{=LOAD('default','fue_a_comisaria.load', args=[request.args[0], request.args[1]], ajax=True)}}
+        {{pass}}
+    </div>
+</div>
+<div class="row py-3">
+    {{if len(request.args) == 2 and request.args[0] != 'None' and request.args[1] != 'None':}}
+    {{=LOAD('default','cantidad_eventos_area.load', args=[request.args[0], request.args[1]], ajax=True)}}
+    {{pass}}
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{if len(request.args) == 2 and request.args[0] != 'None' and request.args[1] != 'None':}}
+        {{=LOAD('default','grafico_calificacion_sistema.load', args=[request.args[0], request.args[1]], ajax=True)}}
+        {{pass}}
+    </div>
+    <div class="col-md-6">
+        {{if len(request.args) == 2 and request.args[0] != 'None' and request.args[1] != 'None':}}
+        {{=LOAD('default','grafico_atencion_comisaria.load', args=[request.args[0], request.args[1]], ajax=True)}}
+        {{pass}}
+    </div>
+</div>
+<script>
+    jQuery('#input_desde').datetimepicker({
+            format: 'Y-m-d',
+            inline: true,
+            timepicker: false,
+            onChangeDateTime: function (dp, $input) {
+                $('#no_table_desde').val($input.val())
+            }
+        });
+    jQuery('#input_hasta').datetimepicker({
+        format: 'Y-m-d',
+        inline: true,
+        timepicker: false,
+        onChangeDateTime: function (dp, $input) {
+            $('#no_table_hasta').val($input.val())
+        }
+    });
+</script>
